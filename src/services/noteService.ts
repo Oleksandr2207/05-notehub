@@ -1,12 +1,15 @@
 import axios, { type AxiosResponse } from "axios";
 import type { Note } from "../types/note";
 
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_NOTEHUB_API,
-  headers: {
-    Authorization: `Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}`,
-    "Content-Type": "application/json",
-  },
+});
+
+api.interceptors.request.use((config) => {
+  const token = import.meta.env.VITE_NOTEHUB_TOKEN;
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
 });
 
 export interface FetchNotesResponse {
@@ -14,6 +17,7 @@ export interface FetchNotesResponse {
   totalPages: number;
   currentPage: number;
 }
+
 
 export const fetchNotes = async (
   page: number,
@@ -26,10 +30,14 @@ export const fetchNotes = async (
   return res.data;
 };
 
-export const createNote = async (note: Omit<Note, "id" | "createdAt" | "updatedAt">): Promise<Note> => {
+
+export const createNote = async (
+  note: Omit<Note, "id" | "createdAt" | "updatedAt">
+): Promise<Note> => {
   const res: AxiosResponse<Note> = await api.post("/notes", note);
   return res.data;
 };
+
 
 export const deleteNote = async (id: string): Promise<Note> => {
   const res: AxiosResponse<Note> = await api.delete(`/notes/${id}`);
