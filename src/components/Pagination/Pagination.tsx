@@ -1,17 +1,23 @@
 import ReactPaginate from 'react-paginate';
 import css from './Pagination.module.css';
 
-interface Props {
+interface PaginationProps {
   pageCount: number;
-  onPageChange: (page: number) => void;
+  currentPage: number;            // поточна активна сторінка
+  onPageChange: (page: number) => void; // батьківський компонент отримує індекс сторінки
 }
 
-export default function Pagination({ pageCount, onPageChange }: Props) {
+export default function Pagination({
+  pageCount,
+  currentPage,
+  onPageChange,
+}: PaginationProps) {
   return (
     <ReactPaginate
       pageCount={pageCount}
-      previousLabel="←"     
-      nextLabel="→"          
+      forcePage={currentPage - 1}       
+      previousLabel="←"
+      nextLabel="→"
       breakLabel="..."
       marginPagesDisplayed={1}
       pageRangeDisplayed={2}
@@ -21,7 +27,8 @@ export default function Pagination({ pageCount, onPageChange }: Props) {
       previousClassName={css.prev}
       nextClassName={css.next}
       breakClassName={css.break}
-      onPageChange={({ selected }) => onPageChange(selected + 1)}
+      onPageChange={({ selected }) => onPageChange(selected + 1)} 
     />
   );
 }
+

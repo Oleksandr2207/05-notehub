@@ -28,14 +28,15 @@ export default function App() {
   });
 
   return (
-    <div className="css.app">
+    <div className={css.app}>
       <header className={css.toolbar}>
   <SearchBox onSearch={(value) => debouncedSearch(value)} />
   {data && data.totalPages > 1 && (
     <Pagination
-      pageCount={data.totalPages}
-      onPageChange={(selected) => setPage(selected)}
-    />
+  pageCount={data.totalPages}
+  currentPage={page}   
+  onPageChange={setPage}
+/>
   )}
   <button className={css.button} onClick={() => setIsModalOpen(true)}>
     Create note +
